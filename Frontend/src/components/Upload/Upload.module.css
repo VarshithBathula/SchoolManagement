@@ -1,0 +1,11 @@
+.ProfileSection{
+    height: 15vh;
+    width: 20%;
+    border-radius: 20px;
+    background-color: bisque;
+    display: flex;
+}
+.ProfilePic{
+    width: 5vw;
+    height: 10vh;
+}
