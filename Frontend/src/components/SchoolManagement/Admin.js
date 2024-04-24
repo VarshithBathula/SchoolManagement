@@ -55,10 +55,9 @@ function Admin() {
             axios.put('http://localhost:3004/admin/'+Newname2, )
             .then(response => {
 
-                console.log('Product added successfully:', response.data);
+                console.log('Product updated successfully:', response.data);
             }).catch(error => {
                 console.error('Error adding product:', error); });
-
         }
         function del(){
             axios.delete('http://localhost:3004/'+ Newname3)
@@ -73,34 +72,34 @@ function Admin() {
         <div>
             <div>
                 <div className={classes.Crud}>
-                    <h4>Search by Name: *GET BY ID</h4>
+                    <h4>Search by School Name:</h4>
                     <label>Name: </label><br/>
                     <input type="text" onChange={(e) => setgetname(e.target.value)}className={classes.input}></input><br/>
-                    <button onClick={GetById}className={classes.btn}>GET</button>
+                    <button onClick={GetById}className={classes.btn}>Search</button>
                     <div id='pID' style={{marginTop:"35px"}}>
-                        Name:    {getdata.name}<br/>
-                        Fees:    {getdata.fees}<br/>
-                        Code:    {getdata.schoolCode}<br/>
-                        Address: {getdata.address}<br/>
+                        School Name:    {getdata.name}<br/>
+                        Fees:           {getdata.fees}<br/>
+                        School Code:    {getdata.schoolCode}<br/>
+                        Address:        {getdata.address}<br/>
                     </div>
                 </div>
             </div>
             <div className={classes.Crud}>
-                <h4>New School *POST: </h4>
-                <label>Name: </label><br/>
+                <h4>New School: </h4>
+                <label>School Name: </label><br/>
                 <input type="text" onChange={(e) => setNewName1(e.target.value)} className={classes.input}></input><br/>
                 <label>Fees: </label><br/>
                 <input type="text" onChange={(e) => setNewFees1(e.target.value)}className={classes.input}></input><br/>
-                <label>Code: </label><br/>
+                <label>School Code: </label><br/>
                 <input type="text" onChange={(e) => setNewCode1(e.target.value)}className={classes.input}></input><br/>
                 <label>Address: </label><br/>
                 <input type="text" onChange={(e) => setNewAddress1(e.target.value)}className={classes.input}></input><br/>
                 <input style={{marginTop:"20px"}} type='file'  name="file" onChange={(e)=>setFile(e.target.files[0])} ></input><br/>
-                <button onClick={postfun}className={classes.btn}>Post</button><br/>
+                <button onClick={postfun}className={classes.btn}>Enter New School</button><br/>
             </div>
         
             <div className={classes.Crud}>
-                <h4>Edit *Put By Id: </h4>
+                <h4>Edit: </h4>
                 <label>Name: </label><br/>
                 <input type="text" onChange={(e) => setNewName2(e.target.value)} style={{borderRadius:"10px",marginTop:"10px",marginBottom:"10px"}}></input><br/>
                 <label>Fees: </label><br/>
@@ -110,14 +109,14 @@ function Admin() {
                 <label>Address: </label><br/>
                 <input type="text" onChange={(e) => setNewAddress2(e.target.value)} className={classes.input}></input><br/>
                 <input style={{marginTop:"20px"}} type='file'  name="file" onChange={(e)=>setFile1(e.target.files[0])} ></input><br/>
-                <button onClick={put} className={classes.btn}>PUT</button><br/>
+                <button onClick={put} className={classes.btn}>Edit</button><br/>
             </div>
         
             <div className={`${classes.Crud} ${classes.curd}`}>
-                <h4>Delete by name:</h4>
+                <h4>Delete:</h4>
                 <label>name:</label><br/>
                 <input type='text' onChange={(e) => setNewName3(e.target.value)}className={classes.input}></input><br/>
-                <button onClick={del} className={classes.btn}>DELETE</button>
+                <button onClick={del} className={classes.btn}>Delete</button>
             </div>
 
             <div className={classes.Crud} style={{display:"flex"}}>

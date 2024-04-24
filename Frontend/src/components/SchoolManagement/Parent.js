@@ -28,15 +28,16 @@ function Parent() {
             });
             
         }
+
     return (
         <div>
             Parent
             <div>
                 <div className={classes.Crud}>
-                    <h4>Search by Name: *GET BY ID</h4>
+                    <h4>Search by Name:</h4>
                     <label>Name: </label><br/>
                     <input type="text" onChange={(e) => setgetname(e.target.value)}className={classes.input}></input><br/>
-                    <button onClick={GetById}className={classes.btn}>GET</button>
+                    <button onClick={GetById}className={classes.btn}>Search</button>
                     <div id='pID' style={{marginTop:"35px"}}>
                         Name:    {getdata.name}<br/>
                         Fees:    {getdata.fees}<br/>

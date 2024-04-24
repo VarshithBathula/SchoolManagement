@@ -1,121 +1,219 @@
-const express= require("express")
-const server = express()
-const cors = require('cors');
-const multer = require("multer")
-const fs = require("fs");
-const path = require('path');
-server.use(cors());
+const express = require("express")
+const cors = require("cors")
+const mongoose = require("mongoose")
+const dotenv = require("dotenv")
+// const bodyParser = require("body-parser")
+const app = express()
+const Routes = require("./routes/route.js")
 
+const PORT = process.env.PORT || 5000
 
-server.use(express.static(path.join(__dirname, "uploads")));
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "uploads/");
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix =Date.now();
-        cb(null, uniqueSuffix +file.originalname);
-    }
-});
-const upload = multer({ storage: storage });
+dotenv.config();
 
-server.use(express.json())
-const mongo_url = "mongodb://localhost:27017/assests"
-const mongoose =require("mongoose")
-mongoose.connect(mongo_url)
-.then(()=>console.log("mongodb connection established "))
-.catch((err)=>console.log(err));
+// app.use(bodyParser.json({ limit: '10mb', extended: true }))
+// app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
 
+app.use(express.json({ limit: '10mb' }))
+app.use(cors())
 
+mongoose
+    .connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(console.log("Connected to MongoDB"))
+    .catch((err) => console.log("NOT CONNECTED TO NETWORK", err))
 
+app.use('/', Routes);
 
-const adminSchema = new mongoose.Schema({
-    name: String,
-    fees: Number,
-    schoolCode: Number,
-    address: String,  
-    image: String,
-});
-const adminModel = mongoose.model("admin",adminSchema)
-
-
-
-
-server.get("/admin/:name", async (req, res) => {
-    try {
-        const item = await adminModel.findOne({ name: name });
-        if (item) {
-            res.json(item);
-        } else {
-            res.status(404).json({ error: "Admin not found" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-})
-
-server.put("/admin/:name",async(req,res)=>{
-    let name = req.params.name
-    let {fees,schoolCode,address} = req.body;
-    let ind =await adminModel.findOneAndUpdate({name:name},{fees,schoolCode,address});
-    if(ind){
-        res.json(ind);
-    }
-    else{
-        res.status(404).send("id not found")
-    }
-});
-
-server.post("/admin", upload.single('image'),async(req,res)=>{
-    let {name,fees,schoolCode,address} = req.body;
-    const imagename = `http://localhost:3004/uploads/${req.file.filename}`;
-    let schoolAdmin =adminModel({name:name,fees:fees,schoolCode:schoolCode,address:address,image:imagename})
-    const nameAlreadyExist = await adminModel.findOne({name:req.body.name});
-    if(nameAlreadyExist){
-        res.status(500).send("User already Exists")
-    }
-    else{
-    schoolAdmin.save()
-    res.status(200).json({schoolAdmin});
-    }
+app.listen(PORT, () => {
+    console.log(`Server started at port no. ${PORT}`)
 })
 
 
 
-server.post("/image", upload.single('file'), async (req, res) => {
-  try {
-    const imagename = `http://localhost:3004/uploads/${req.file.filename}`;
 
-    let newUser = new adminModel({ image: imagename });
-    await newUser.save();
-    res.json(newUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+// const express = require("express")
+// const cors = require("cors")
+// const mongoose = require("mongoose")
+// // const dotenv = require("dotenv")
+// // const bodyParser = require("body-parser")
+// const server = express()
+// const Routes = require("./routes/route.js")
+
+// // dotenv.config();
+
+// // app.use(bodyParser.json({ limit: '10mb', extended: true }))
+// // app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+
+// server.use(express.json())
+// server.use(cors())
+
+// const mongo_url = "mongodb://localhost:27017/assests"
+// mongoose
+//     .connect(mongo_url)
+//     .then(console.log("Connected to MongoDB"))
+//     .catch((err) => console.log("NOT CONNECTED TO NETWORK", err))
+
+// server.use('/', Routes);
+
+// server.listen(5000, () => {
+//     console.log('Server started at port')
+// })
 
 
-server.delete("/:name",async (req,res)=>{
-    try{
-    const School = req.params.name;
-
-    let s = await adminModel.findOneAndDelete( {name:School});
-    
-    if(s != null) res.json(s);
-    else res.status(404).send("No such student found");
-    }
-    catch (error) {
-        console.error('Error fetching students:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-})
+// const express= require("express")
+// const server = express()
+// const cors = require('cors');
+// const multer = require("multer")
+// const fs = require("fs");
+// const path = require('path');
+// server.use(cors());
 
 
-server.listen(3004,()=>{
-    console.log("Server has Started");
-});
+// server.use(express.static(path.join(__dirname, "uploads")));
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, "uploads/");
+//     },
+//     filename: function (req, file, cb) {
+//         // const uniqueSuffix =Date.now(); uniqueSuffix +
+//         cb(null,file.originalname);
+//     }
+// });
+// const upload = multer({ storage: storage });
+
+// server.use(express.json())
+// const mongo_url = "mongodb://localhost:27017/assests"
+// const mongoose =require("mongoose")
+// mongoose.connect(mongo_url)
+// .then(()=>console.log("mongodb connection established "))
+// .catch((err)=>console.log(err));
+
+
+
+
+// const adminSchema = new mongoose.Schema({
+//     name: String,
+//     fees: Number,
+//     schoolCode: Number,
+//     address: String,  
+//     image: String,
+// });
+// const adminModel = mongoose.model("admin",adminSchema)
+
+// server.get("/admin",async(req,res)=>{
+//     try{
+//         let schools = await adminModel.find();
+//         res.send(schools);
+//     }
+//     catch(error){
+//         console.error('Error fetching schools:',error);
+//         res.status(500).json({error:'Internal server error'});
+//     }
+// });
+
+
+// server.get("/admin/:name", async (req, res) => {
+//     const {name} = req.params;
+//     try {
+//         const item = await adminModel.findOne({ name: name });
+//         if (item) {
+//             res.json(item);
+//         } else {
+//             res.status(404).json({ error: "Admin not found" });
+//         }
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Internal server error" });
+//     }
+// })
+
+
+// server.put("/admin/:name",async(req,res)=>{
+//     try{
+//         const imagename = `http://localhost:3004/uploads/${req.file.filename}`;
+//         let {fees,schoolCode,address} = req.body;
+//         let name = req.params.name
+//         let item = await adminModel.findOne({name:name});
+//         const previousFileName = item.image.split('/').pop();
+//         const previousImagePath = path.join(__dirname,'uploads',previousFileName);
+//         let s = await adminModel.findOneAndUpdate({name:name},{fees,schoolCode,address,image:imagename},{new:true});
+//         fs.unlink(previousImagePath,(err)=>{
+//             if(err){
+//                 console.error('Error deleting previous file:',err);
+//             }
+//             else{
+//                 console.log('Previous file deleted successfully');
+//             }
+//         });
+//         res.json(s);
+//     }
+//     catch(error){
+//         console.error('Error fetching students:',error);
+//         res.status(500).json({error:'Internal server error'});
+//     }
+// });
+
+
+// server.post("/admin", upload.single('image'),async(req,res)=>{
+//     let {name,fees,schoolCode,address} = req.body;
+//     const imagename = `http://localhost:3004/uploads/${req.file.filename}`;
+//     let schoolAdmin =adminModel({name:name,fees:fees,schoolCode:schoolCode,address:address,image:imagename})
+//     const nameAlreadyExist = await adminModel.findOne({name:req.body.name});
+//     if(nameAlreadyExist){
+//         res.status(500).send("User already Exists")
+//     }
+//     else{
+//     schoolAdmin.save()
+//     res.status(200).json({schoolAdmin});
+//     }
+// })
+
+
+
+// server.post("/image", upload.single('file'), async (req, res) => {
+//   try {
+//     const imagename = `http://localhost:3004/uploads/${req.file.filename}`;
+
+//     let newUser = new adminModel({ image: imagename });
+//     await newUser.save();
+//     res.json(newUser);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+
+// server.delete("/:name",async (req,res)=>{
+//     try{
+//     const School = req.params.name;
+//     let item = await adminModel.findOne({name:name});
+//     let s = await adminModel.findOneAndDelete( {name:School});
+//     const previousFileName = item.image.split('/').pop();
+//     const previousImagePath = path.join(__dirname,'uploads',previousFileName);
+//     fs.unlink(previousImagePath,(err)=>{
+//         if(err){
+//             console.error('Error deleting previous file:',err);
+//         }
+//         else{
+//             console.log('Previous file deleted successfully');
+//         }
+//     });
+//     if(s != null) res.json(s);
+//     else res.status(404).send("No such student found");
+//     }
+//     catch (error) {
+//         console.error('Error fetching students:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// })
+
+
+// server.listen(3004,()=>{
+//     console.log("Server has Started");
+// });
 
 
 
