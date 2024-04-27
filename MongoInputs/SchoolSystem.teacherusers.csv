@@ -1,0 +1,4 @@
+_id,empid,password,name,schoolName,date,__v
+662c4d21132098338807daeb,teacher5@gmail.com,$2b$10$eWlcVwnVYj91/bbrgGl8ZeXhB3FI/18PDefRmSgrS5vvK..NYQv.m,Teacher5,Umbrella Academy,2024-04-27T00:56:01.981Z,0
+662c4e19132098338807daee,teacher1@gmail.com,$2b$10$n/PMePgf7Bs8Qyst3JCU3Ofj3bIl2U2wxSo5PueaTwy/I86mKy7ma,Teacher1,Umbrella Academy,2024-04-27T01:00:09.435Z,0
+662c6473132098338807db7b,teacher6@gmail.com,$2b$10$5UBaRp4pUMjoFhfdpLghROsHREQdairfWF.K8OBXRJPly..Xp9Nl6,Teacher6,Umbrella Academy,2024-04-27T02:35:31.237Z,0
