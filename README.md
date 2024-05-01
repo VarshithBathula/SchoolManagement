@@ -1,0 +1,1 @@
+This project is just a skeleton design of the better version. You will find much more updates in the future. As of now, all basic operations can be perform apart from the profile display which needs some work to be done. Thank you.
